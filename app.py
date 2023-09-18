@@ -1,6 +1,7 @@
-import requests
 import re
+
 import bs4
+import requests
 
 url = "https://www.books.com.tw/web/sys_newtopb/books/"  # 博客來新書網址
 html = requests.get(url)  # 利用 requests 套件取回網頁原始碼
