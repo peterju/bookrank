@@ -32,34 +32,18 @@ brank = soup.select("ul.clearfix")
 brank2 = soup.find_all("ul", {"class": "clearfix"})
 # print(brank2[1])  # <class 'bs4.element.Tag'>
 
-# 片段原始碼：第一名
-# <li class="item">
-#   <div class="stitle">
-#     <p class="no_list"><span class="symbol icon_01">TOP</span><strong class="no">1</strong></p>
-#   </div>
-#   <a href="https://www.books.com.tw/products/0010840659?loc=P_0003_001"><img class="cover" src="//im2.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/084/06/0010840659.jpg&v=5de5e1fa&w=150&h=150" alt="勇敢層級：用你喜歡的方式，活出你自己"></a>
-#   <div class="type02_bd-a">
-#     <h4><a href="https://www.books.com.tw/products/0010840659?loc=P_0003_001">勇敢層級：用你喜歡的方式，活出你自己</a></h4>
-#     <ul class="msg">
-#       <li>作者：<a href='//search.books.com.tw/search/query/key/%E7%B4%AB%E5%9A%B4%E5%B0%8E%E5%B8%AB/adv_author/1/'>紫嚴導師</a></li>
-#       <li class="price_a">優惠價：
-#         <strong><b>79</b></strong>折
-#         <strong><b>269</b></strong>元
-#       </li>
-#     </ul>
-#   </div>
-# </li>
-#
 # 列出排行書籍前100名的 名次、書名、作者、價格
 books = []
 book = {}
 for item in brank[2].select(".item"):
     book["rank"] = item.select_one(".stitle .no").text
     book["title"] = item.select_one(".type02_bd-a").h4.a.text
-    # book["author"]=item.select_one(".type02_bd-a .msg").li.a.text                # 因為部分沒有作者的書籍會造成錯誤，因此不能使用此判斷，改用先判斷是否存在作者
+    # 因為部分沒有作者的書籍會造成錯誤，因此不能使用此判斷，改用先判斷是否存在作者
+    # book["author"]=item.select_one(".type02_bd-a .msg").li.a.text
     author = item.select_one(".type02_bd-a .msg").li.a
     book["author"] = author.get_text() if author is not None else "不明"
-    # print(item.select_one(".type02_bd-a .msg .price_a").contents[3].b.text)      # 因為部分沒有折數的書籍會造成錯誤，因此不能使用此判斷，改用正規表示式
+    # 因為部分沒有折數的書籍會造成錯誤，因此不能使用此判斷，改用正規表示式
+    # print(item.select_one(".type02_bd-a .msg .price_a").contents[3].b.text)
 
     # 優惠價：79折269元
     price = item.select_one(".type02_bd-a .msg .price_a").text
@@ -68,7 +52,11 @@ for item in brank[2].select(".item"):
     book["price"] = result.group(1)
 
     # price = item.select_one(".type02_bd-a .msg .price_a")
-    # book["price"]=price.get_text() if price is not None else item.select_one(".type02_bd-a .msg .price_a > div:nth-of-type(2)").text
+    # book["price"] = (
+    #     price.get_text()
+    #     if price is not None
+    #     else item.select_one(".type02_bd-a .msg .price_a > div:nth-of-type(2)").text
+    # )
 
     books.append(book)
     book = {}
