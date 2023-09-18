@@ -63,7 +63,7 @@ for item in brank[2].select(".item"):
 
     # 優惠價：79折269元
     price = item.select_one(".type02_bd-a .msg .price_a").text
-    patten = re.compile("(\d*)元")  # 設定比對的樣板
+    patten = re.compile(r"(\d*)元")  # 設定比對的樣板
     result = re.search(patten, price)
     book["price"] = result.group(1)
 
@@ -75,8 +75,4 @@ for item in brank[2].select(".item"):
 
 # print(books[0].keys())
 for book in books:
-    print(
-        "TOP{} {} 作者：{} 價格：{}".format(
-            book["rank"], book["title"], book["author"], book["price"]
-        )
-    )
+    print("TOP{} {} 作者：{} 價格：{}".format(book["rank"], book["title"], book["author"], book["price"]))
